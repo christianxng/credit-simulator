@@ -16,18 +16,18 @@ Dado a isso é gerada uma simulação do valor a ser pago.
 - LocalStack
 - Zalando Problems Details
 
-## Dependencias
+## Dependências
 
 - PostgreSQL
 - Amazon SES 
 - Apache Kafka
 
-## Como Rodar o projeto em sua maquina
+## Como executar o projeto em sua máquina
 
 1. Clone o repositório em sua máquina e faça a habilite o serviço do docker.
 
 ```shell
-  git clone url-do-projeto
+  git clone https://github.com/christianxng/credit-simulator
 ```
 
 2. Vá até o diretório do projeto e faça o build da imagem do credit simulator, com o comando abaixo: 
@@ -49,7 +49,7 @@ Pronto, agora você tem o projeto executando em seu ambiente local, e pode reali
 Com o projeto em execução em sua maquina, basta seguir os passos abaixos para testar os endpoints
 
 
-### Requisicão de simulação de crédito simples
+### Requisição de simulação de crédito simples
 
 
 1. Baixe e configure um cliente HTTP como [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/download) ou [Curl](https://curl.se/) para executar 
@@ -188,3 +188,8 @@ O Projeto conta com processamentos assíncronos através de "Coroutines" (kotlin
 Essas implementações buscam dar velocidade de processamento em pontos não blocantes.
 
 Também foi adicionado processamento assíncrono para requisições que durarem mais de 1 segundo
+
+
+## Swagger
+
+A documentação do swagger está disponível neste link: [SWAGGER](http://localhost:8080/swagger-ui/index.html)

@@ -14,15 +14,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Credit Simulation", description = "APIs to credit simulate")
 interface CreditSimulationApi {
     @Operation(
         summary = "Simple Credit Simulation",
-        description = "Initiates a credit simulation process."
+        description = "Initiate a credit simulation process"
     )
     @ApiResponses(
         ApiResponse(
@@ -156,7 +153,7 @@ interface CreditSimulationApi {
 
     @Operation(
         summary = "Multiple Credit Simulation",
-        description = "Initiates a multiple credit simulation process."
+        description = "Initiate a multiple credit simulation process"
     )
     @ApiResponses(
         ApiResponse(
