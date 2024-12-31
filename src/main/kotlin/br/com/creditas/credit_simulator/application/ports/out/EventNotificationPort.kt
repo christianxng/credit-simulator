@@ -1,0 +1,7 @@
+package br.com.creditas.credit_simulator.application.ports.out
+
+import br.com.creditas.credit_simulator.application.domain.CreditSimulation
+
+interface EventNotificationPort {
+    operator fun invoke(creditSimulation: CreditSimulation)
+}

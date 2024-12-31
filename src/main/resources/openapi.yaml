@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  title: Credit Simulation API
+  version: 1.0.0
+paths:
+  /v1/credit/simulate:
+    post:
+      summary: Simulate credit
+      description: Initiates a credit simulation process.
+      operationId: simulateCredit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditSimulationRequest'
+      responses:
+        '200':
+          description: Simulation completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditSimulationResponse'
+              example:
+                simulationId: "d42e0c4b-e78c-4022-89ae-8a315c911c73"
+                presentValue: 100000.00
+                numberOfPayments: 50
+                annualInterestRate: 0.03
+                monthlyPayment: 2130.10
+        '202':
+          description: Simulation is being processed asynchronously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncResponse'
+              example:
+                simulationId: "a3f8c056-2fbe-41a5-9fbe-034d3b56ab6b"
+                message: "Request is processing and will finish asynchronously"
+        '400':
+          description: Invalid request data, with field constraint violations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation'
+              example:
+                type: "https://zalando.github.io/problem/constraint-violation"
+                status: 400
+                violations:
+                  - field: "dateOfBirth"
+                    message: "não deve ser nulo"
+                  - field: "email"
+                    message: "não deve estar em branco"
+                  - field: "numberOfPayments"
+                    message: "não deve ser nulo"
+                  - field: "presentValue"
+                    message: "não deve ser nulo"
+                title: "Constraint Violation"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              example:
+                title: "Internal Server Error"
+                status: 500
+                detail: "An unexpected error occurred. Please contact the system administrator."
+components:
+  schemas:
+    CreditSimulationRequest:
+      type: object
+      properties:
+        presentValue:
+          type: number
+          format: double
+          minimum: 0.01
+        dateOfBirth:
+          type: string
+          format: date
+        numberOfPayments:
+          type: integer
+          minimum: 1
+        email:
+          type: string
+          format: email
+      required:
+        - presentValue
+        - dateOfBirth
+        - numberOfPayments
+        - email
+      description: Schema for credit simulation request.
+      example:
+        presentValue: 100000.00
+        dateOfBirth: "1990-01-01"
+        numberOfPayments: 50
+        email: "example@example.com"
+
+    CreditSimulationResponse:
+      type: object
+      properties:
+        simulationId:
+          type: string
+          format: uuid
+        presentValue:
+          type: number
+          format: double
+        numberOfPayments:
+          type: integer
+        annualInterestRate:
+          type: number
+          format: double
+        monthlyPayment:
+          type: number
+          format: double
+      required:
+        - simulationId
+        - presentValue
+        - numberOfPayments
+        - annualInterestRate
+        - monthlyPayment
+      description: Response schema for a completed credit simulation.
+      example:
+        simulationId: "d42e0c4b-e78c-4022-89ae-8a315c911c73"
+        presentValue: 100000.00
+        numberOfPayments: 50
+        annualInterestRate: 0.03
+        monthlyPayment: 2130.10
+
+    AsyncResponse:
+      type: object
+      properties:
+        simulationId:
+          type: string
+          format: uuid
+        message:
+          type: string
+      required:
+        - simulationId
+        - message
+      description: Response for asynchronous processing of the credit simulation.
+      example:
+        simulationId: "a3f8c056-2fbe-41a5-9fbe-034d3b56ab6b"
+        message: "Request is processing and will finish asynchronously"
+
+    ConstraintViolation:
+      type: object
+      properties:
+        type:
+          type: string
+        status:
+          type: integer
+        violations:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+        title:
+          type: string
+      required:
+        - type
+        - status
+        - violations
+        - title
+      description: Schema for constraint violation errors.
+      example:
+        type: "https://zalando.github.io/problem/constraint-violation"
+        status: 400
+        violations:
+          - field: "dateOfBirth"
+            message: "não deve ser nulo"
+          - field: "email"
+            message: "não deve estar em branco"
+          - field: "numberOfPayments"
+            message: "não deve ser nulo"
+          - field: "presentValue"
+            message: "não deve ser nulo"
+        title: "Constraint Violation"
+
+    InternalServerError:
+      type: object
+      properties:
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+      required:
+        - title
+        - status
+        - detail
+      description: Schema for internal server error responses.
+      example:
+        title: "Internal Server Error"
+        status: 500
+        detail: "An unexpected error occurred. Please contact the system administrator."
