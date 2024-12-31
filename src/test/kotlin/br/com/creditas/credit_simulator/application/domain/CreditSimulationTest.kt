@@ -48,7 +48,7 @@ class CreditSimulationTest {
     fun `deve criar a simulação com erro quando o cálculo falha`() {
         val simulation = CreditSimulation.create(
             presentValue = BigDecimal("10000.00"),
-            numberOfPayments = 0, // Invalid number of payments to force error
+            numberOfPayments = 0, // numero de pagamentos inválidos para forçar erro
             email = "teste@teste.com",
             simulationId = UUID.randomUUID()
         )

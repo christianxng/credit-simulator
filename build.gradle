@@ -47,7 +47,6 @@ dependencies {
 
 	testImplementation 'org.awaitility:awaitility-kotlin:4.0.0'
 	testImplementation 'org.testcontainers:postgresql'
-//	testImplementation 'org.testcontainers:kafka:1.19.7'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:localstack:1.19.7'
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'

@@ -175,3 +175,16 @@ Best regards,
 Credit Team
 ```
 
+## Projeto e Arquitetura
+
+O projeto foi construído com arquitetura hexagonal. Foi escolhida a arquitetura pela facilidade de alteração de dependências, integrações, framework e outras configurações sem que o domínio da aplicação seja impactado. Então fica fácil qualquer alteração que seja necessária.
+
+O Projeto conta com processamentos assíncronos através de "Coroutines" (kotlinx.coroutines) em:
+
+* Solicitação de simulação simples
+* Solicitação de simulação múltipla
+* Envio de notificações (eventos no tópico kafka e Emails através do AWS SES)
+
+Essas implementações buscam dar velocidade de processamento em pontos não blocantes.
+
+Também foi adicionado processamento assíncrono para requisições que durarem mais de 1 segundo
