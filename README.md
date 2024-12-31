@@ -92,7 +92,7 @@ com nome credit-simulator-topic. E receberá uma resposta HTTP com Status 202 AC
 ```
 
 
-### Requisição de múltiplas análises de credito
+### Requisição de múltiplas análises de crédito
 
 
 
