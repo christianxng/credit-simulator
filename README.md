@@ -69,13 +69,14 @@ menor igual a 1 segundo, você receberá uma Resposta HTTP com Status 200 OK, e 
 
 ```json
 {
-   "simulationId": "f66f96b8-c075-4533-9845-f218b69fed50",
-   "presentValue": 100000,
-   "numberOfPayments": 50,
-   "annualInterestRate": 0.03,
-   "monthlyPayment": 2130.1,
-   "email": "example@example.com",
-   "status": "SUCCESS"
+  "simulationId": "45de8d90-f2a2-4238-bee8-e729ca928572",
+  "presentValue": 100000.00,
+  "numberOfPayments": 50,
+  "interestRate": {
+    "interestRateType": "FIXED",
+    "annualInterestRate": 0.03
+  },
+  "monthlyPayment": 2130.10
 }
 ```
 
@@ -121,20 +122,26 @@ processamento em até 1 segundo, é retornado a seguinte Resposta HTTP com Statu
 
 ```json
 [
-	{
-		"simulationId": "86446fa3-630c-4b3b-be55-6a5765ab5573",
-		"presentValue": 100000.00,
-		"numberOfPayments": 50,
-		"annualInterestRate": 0.03,
-		"monthlyPayment": 2130.10
-	},
-	{
-		"simulationId": "71a0685e-b63b-4e79-89ba-a268b90d8bed",
-		"presentValue": 100001.00,
-		"numberOfPayments": 50,
-		"annualInterestRate": 0.03,
-		"monthlyPayment": 2130.12
-	}
+  {
+    "simulationId": "5521a13e-da8d-45b3-ab62-f624cc21e490",
+    "presentValue": 100000.00,
+    "numberOfPayments": 50,
+    "interestRate": {
+      "interestRateType": "FIXED",
+      "annualInterestRate": 0.03
+    },
+    "monthlyPayment": 2130.10
+  },
+  {
+    "simulationId": "12b5b444-59d4-4ca8-841f-8a680898faa0",
+    "presentValue": 100001.00,
+    "numberOfPayments": 50,
+    "interestRate": {
+      "interestRateType": "FIXED",
+      "annualInterestRate": 0.03
+    },
+    "monthlyPayment": 2130.12
+  }
 ]
 ```
 
@@ -155,6 +162,25 @@ Em caso de processamento assíncrono é retornada a Resposta HTTP com Status 202
 
 Para validar se sua solicitação foi processada, você poderá consultar as mensagens do topico através do [kafdrop](http://localhost:19000/)
 neste [endereco](http://localhost:19000/topic/credit-simulator-topic/allmessages).
+
+Exemplo de mensagem enviada:
+```json
+{
+  "simulationId": "ac6ef052-e961-421f-945e-93dfe47a95ef",
+  "presentValue": 100000,
+  "numberOfPayments": 50,
+  "interestRate": {
+    "spread": null,
+    "annualInterestRate": 0.03,
+    "interestRateType": "FIXED",
+    "marketIndexName": null,
+    "marketIndexAnnualInterestRate": null
+  },
+  "monthlyPayment": 2130.1,
+  "email": "teste@teste.com",
+  "status": "SUCCESS"
+}
+```
 
 E em caso de sucesso, é enviado para o email informado na requisição as informações da simulação.
 
@@ -177,7 +203,10 @@ Credit Team
 
 ## Projeto e Arquitetura
 
-O projeto foi construído com arquitetura hexagonal. Foi escolhida a arquitetura pela facilidade de alteração de dependências, integrações, framework e outras configurações sem que o domínio da aplicação seja impactado. Então fica fácil qualquer alteração que seja necessária.
+O projeto foi construído com arquitetura hexagonal. Foi escolhida a arquitetura pela facilidade de alteração 
+de dependências, integrações, framework e outras configurações sem que o domínio da aplicação seja impactado. 
+Então fica fácil qualquer alteração que seja necessária. A arquitetura também permite clara definição e separação de 
+responsabilidades, gerando clareza e facilidade em evoluções ou manutenções ao código. 
 
 O Projeto conta com processamentos assíncronos através de "Coroutines" (kotlinx.coroutines) em:
 
@@ -188,6 +217,51 @@ O Projeto conta com processamentos assíncronos através de "Coroutines" (kotlin
 Essas implementações buscam dar velocidade de processamento em pontos não blocantes.
 
 Também foi adicionado processamento assíncrono para requisições que durarem mais de 1 segundo
+
+### Taxas de juros fixas e variáveis
+
+Foi assumido que a seleção do tipo de taxa de juros é uma decisão de negócio. Portanto, a configuração é feita através da própria aplicação.
+Para decisão do tipo de taxa, define-se a propriedade:
+```
+credit.simulator.interest-rate-type
+```
+
+que pode assumir os valores:
+```
+[ FIXED, VARIABLE ]
+```
+Ao definir o valor FIXED, a taxa de juros será fixa baseada na idade calculada a partir da data de aniversário enviada na requisição de simulação.
+
+Ao definir o valor como VARIABLE, torna-se necessário definir uma nova propriedade:
+
+```
+credit.simulator.market-index-enabled
+```
+que pode assumir os valores:
+```
+[ CDI, SELIC, IPCA ]
+```
+Essa propriedade define o indicador de mercado que será utilizado para o cálculo.
+
+As configurações de taxas de cada índice fica nas respectivas propriedades:
+```
+credit.simulator.market-index[0].name=CDI
+credit.simulator.market-index[0].spread=0.02
+credit.simulator.market-index[0].interest-rate=0.1215
+
+credit.simulator.market-index[1].name=SELIC
+credit.simulator.market-index[1].spread=0.02
+credit.simulator.market-index[1].interest-rate=0.1375
+
+credit.simulator.market-index[2].name=IPCA
+credit.simulator.market-index[2].spread=0.02
+credit.simulator.market-index[2].interest-rate=0.0039
+```
+Em que:
+
+* name = Nome do índice
+* spread = Taxa adicional (%)
+* interest-rate= Taxa variável anual (%)
 
 
 ## Swagger

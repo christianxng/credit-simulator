@@ -18,10 +18,9 @@ class TestContainersInitializer : ApplicationContextInitializer<ConfigurableAppl
             DockerImageName.parse("postgres:16.1")
         )
 
-        val LOCALSTACK: LocalStackContainer = LocalStackContainer(
+        val LOCALSTACK = LocalStackContainer(
             DockerImageName.parse("localstack/localstack")
         )
-
 
         init {
             Startables.deepStart(POSTGRES, LOCALSTACK).join()

@@ -2,6 +2,8 @@ package br.com.creditas.credit_simulator.adapter.out.notification.event
 
 import br.com.creditas.credit_simulator.application.domain.CreditSimulation
 import br.com.creditas.credit_simulator.application.domain.CreditSimulationStatus
+import br.com.creditas.credit_simulator.application.domain.InterestRate.InterestRateType
+import br.com.creditas.credit_simulator.application.domain.InterestRate.MarketIndexName
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.math.BigDecimal
 import java.util.*
@@ -11,7 +13,7 @@ class CreditSimulationEvent private constructor(
     val simulationId: UUID,
     val presentValue: BigDecimal?,
     val numberOfPayments: Int?,
-    val annualInterestRate: BigDecimal?,
+    val interestRate: InterestRate?,
     val monthlyPayment: BigDecimal?,
     val email: String?,
     val status: EventStatus
@@ -19,6 +21,14 @@ class CreditSimulationEvent private constructor(
     enum class EventStatus {
         SUCCESS, ERROR
     }
+
+    class InterestRate(
+        var spread: BigDecimal? = null,
+        var annualInterestRate: BigDecimal,
+        val interestRateType: InterestRateType,
+        val marketIndexName: MarketIndexName? = null,
+        var marketIndexAnnualInterestRate: BigDecimal? = null,
+    )
 
     constructor(
         creditSimulation: CreditSimulation
@@ -28,7 +38,7 @@ class CreditSimulationEvent private constructor(
         email = creditSimulation.email,
         presentValue = creditSimulation.presentValue,
         numberOfPayments = creditSimulation.numberOfPayments,
-        annualInterestRate = creditSimulation.annualInterestRate,
+        interestRate = fromInterestRate(creditSimulation.interestRate!!),
         monthlyPayment = creditSimulation.monthlyPayment
     )
 
@@ -38,6 +48,18 @@ class CreditSimulationEvent private constructor(
                 CreditSimulationStatus.SUCCESS -> EventStatus.SUCCESS
                 CreditSimulationStatus.ERROR -> EventStatus.ERROR
             }
+        }
+
+        private fun fromInterestRate(
+            interestRate: br.com.creditas.credit_simulator.application.domain.InterestRate
+        ): InterestRate {
+            return InterestRate(
+                spread = interestRate.spread,
+                annualInterestRate = interestRate.annualInterestRate,
+                interestRateType = interestRate.interestRateType,
+                marketIndexName = interestRate.marketIndexName,
+                marketIndexAnnualInterestRate = interestRate.marketIndexAnnualInterestRate,
+            )
         }
     }
 }

@@ -14,7 +14,7 @@ class CreditSimulation private constructor(
     var monthlyPayment: BigDecimal? = null
         private set
 
-    var annualInterestRate: BigDecimal? = null
+    var interestRate: InterestRate? = null
         private set
 
     var status: CreditSimulationStatus? = null
@@ -37,9 +37,9 @@ class CreditSimulation private constructor(
     fun isSimulationWithError(): Boolean = this.status == CreditSimulationStatus.ERROR
     fun isSimulationWithSuccess(): Boolean = this.status == CreditSimulationStatus.SUCCESS
 
-    fun process(annualInterestRate: BigDecimal) {
+    fun process(interestRate: InterestRate) {
         runCatching {
-            this.annualInterestRate = annualInterestRate
+            this.interestRate = interestRate
             this.monthlyPayment = calculatePMT()
             this.status = CreditSimulationStatus.SUCCESS
         }.onFailure { ex ->
@@ -52,7 +52,7 @@ class CreditSimulation private constructor(
     private fun calculatePMT(): BigDecimal {
 
         // Calcula a taxa mensal (taxa anual / 12)
-        val monthlyRate = this.annualInterestRate!!.divide(BigDecimal("12"), 8, RoundingMode.HALF_EVEN)
+        val monthlyRate = this.interestRate!!.annualInterestRate.divide(BigDecimal("12"), 8, RoundingMode.HALF_EVEN)
 
         // Calcula (1 + r)^n
         val base = BigDecimal.ONE.add(monthlyRate)

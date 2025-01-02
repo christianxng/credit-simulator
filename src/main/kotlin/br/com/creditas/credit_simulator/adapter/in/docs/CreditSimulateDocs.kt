@@ -35,10 +35,13 @@ interface CreditSimulationApi {
                             summary = "Successful simulation example",
                             value = """
                             {
-                                "simulationId": "d42e0c4b-e78c-4022-89ae-8a315c911c73",
+                                "simulationId": "45de8d90-f2a2-4238-bee8-e729ca928572",
                                 "presentValue": 100000.00,
                                 "numberOfPayments": 50,
-                                "annualInterestRate": 0.03,
+                                "interestRate": {
+                                    "interestRateType": "FIXED",
+                                    "annualInterestRate": 0.03
+                                },
                                 "monthlyPayment": 2130.10
                             }
                             """
@@ -168,15 +171,28 @@ interface CreditSimulationApi {
                             name = "MultipleCreditSimulationSuccessExample",
                             summary = "Successful simulation example",
                             value = """
-                                [
-                                    {
-                                        "simulationId": "d42e0c4b-e78c-4022-89ae-8a315c911c73",
-                                        "presentValue": 100000.00,
-                                        "numberOfPayments": 50,
-                                        "annualInterestRate": 0.03,
-                                        "monthlyPayment": 2130.10
-                                    }
-                                ]
+                            [
+                                {
+                                    "simulationId": "5521a13e-da8d-45b3-ab62-f624cc21e490",
+                                    "presentValue": 100000.00,
+                                    "numberOfPayments": 50,
+                                    "interestRate": {
+                                        "interestRateType": "FIXED",
+                                        "annualInterestRate": 0.03
+                                    },
+                                    "monthlyPayment": 2130.10
+                                },
+                                {
+                                    "simulationId": "12b5b444-59d4-4ca8-841f-8a680898faa0",
+                                    "presentValue": 100001.00,
+                                    "numberOfPayments": 50,
+                                    "interestRate": {
+                                        "interestRateType": "FIXED",
+                                        "annualInterestRate": 0.03
+                                    },
+                                    "monthlyPayment": 2130.12
+                                }
+                            ]
                             """
                         )
                     ]
@@ -277,9 +293,15 @@ interface CreditSimulationApi {
                         [
                             {
                                 "presentValue": 100000.00,
-                                "dateOfBirth": "1980-01-01",
+                                "dateOfBirth": "1996-03-23",
                                 "numberOfPayments": 50,
-                                "email": "example@example.com"
+                                "email": "teste@teste.com"
+                            },
+                            {
+                                "presentValue": 100001.00,
+                                "dateOfBirth": "1996-03-23",
+                                "numberOfPayments": 50,
+                                "email": "teste@teste.com"
                             }
                         ]
                         """

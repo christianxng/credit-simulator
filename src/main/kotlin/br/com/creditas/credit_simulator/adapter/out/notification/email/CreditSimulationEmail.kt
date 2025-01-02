@@ -21,7 +21,7 @@ class CreditSimulationEmail private constructor(
         simulationId = creditSimulation.simulationId,
         presentValue = creditSimulation.presentValue,
         numberOfPayments = creditSimulation.numberOfPayments,
-        annualInterestRate = creditSimulation.annualInterestRate!!,
+        annualInterestRate = creditSimulation.interestRate!!.annualInterestRate,
         monthlyPayment = creditSimulation.monthlyPayment!!
     )
 
